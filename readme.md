@@ -2,12 +2,12 @@
 
 ## 安装
 ```
-npm install mkdir
+npm install mk-dir
 ```
 
 ## 使用
 ```
-var mkdir = require('mkdir');
+var mkdir = require('mk-dir');
 
 mkdir('test/test/test/');
 ```
