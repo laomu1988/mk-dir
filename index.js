@@ -1,24 +1,31 @@
 var fs = require('fs');
-
-
+var path = require('path');
+// console.log('process.cwd()', process.cwd());
 function MakeFolder(folder) {
-    try {
-        if (!folder) {
-            return;
-        }
-        if (fs.existsSync(folder)) {
-            return;
-        }
-        var before = folder.substring(0, folder.lastIndexOf('/'));
-        if (!fs.existsSync(before)) {
-            MakeFolder(before);
-        }
-        fs.mkdirSync(folder);
-    } catch (e) {
-        console.log(e);
+  try {
+    if (!folder) return;
+    folder = path.normalize(folder);
+    var now = folder;
+    while (now && !fs.existsSync(now)) {
+      now = now.substr(0, now.lastIndexOf('/'));
+      // console.log('now:', now);
     }
-
-    return;
+    if (now && now[now.length - 1] !== '/') now += '/';
+    var append = folder.substr(now.length);
+    var folders = append.split('/').filter(function (v) {
+      return v.length > 0;
+    });
+    // console.log('folders:', folders);
+    for (var i = 0; i < folders.length; i++) {
+      now += folders[i] + '/';
+      // console.log('mk-dir:', now);
+      fs.mkdirSync(now);
+    }
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }
 
 module.exports = MakeFolder;
